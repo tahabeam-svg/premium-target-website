@@ -1,0 +1,147 @@
+🇸🇦 البرومبت العربي (ملف مستقل — التزام صارم)
+
+أنشئ عرض تقديمي احترافي منفصل بالكامل باللغة العربية فقط بعنوان:
+
+معرض المنتجات الدولي – الرياض 2026
+
+🚫 تعليمات إلزامية صارمة (غير قابلة للتجاوز):
+
+يُمنع منعًا باتًا إدخال أي كلمة إنجليزية داخل هذا الملف مهما كانت (حتى في العناوين الصغيرة أو الحواشي أو الأزرار أو التذييل).
+
+يجب أن يكون اتجاه العرض بالكامل من اليمين إلى اليسار (RTL) دون استثناء.
+
+جميع العناوين والنصوص والقوائم بمحاذاة يمين حصريًا.
+
+يجب استخدام خط Cairo فقط ولا غيره في جميع الشرائح:
+
+العناوين: Cairo Bold
+
+النصوص: Cairo Regular
+
+يمنع استخدام أي خط بديل حتى مؤقتًا.
+
+يجب استخدام شعار المعرض المرفق في الغلاف وجميع الشرائح.
+
+الالتزام الحصري بـ ألوان الهوية البصرية المرفقة دون إضافة أي لون خارجي.
+
+يُمنع استخدام أي صور تحتوي على علامة مائية أو جودة منخفضة.
+
+🖼️ الصور (شروط إلزامية صارمة):
+
+جميع صور الأشخاص يجب أن تكون لأشخاص سعوديين أو خليجيين بزي رسمي.
+
+جميع صور المدن أو المعالم يجب أن تكون من المملكة العربية السعودية فقط.
+
+يُمنع استخدام أي صور غربية أو أوروبية أو غير سعودية.
+
+يُمنع استخدام أي صورة غير مرخصة أو تحتوي على Watermark.
+
+🎨 الأسلوب البصري:
+
+تصميم Corporate سعودي فاخر، عصري، نظيف، احترافي عالي المستوى.
+
+مساحات بيضاء واضحة.
+
+أيقونات خطية رفيعة Minimal.
+
+خلفيات مستوحاة من العمارة السعودية الحديثة أو زخارف هندسية خليجية ناعمة.
+
+توزيع متوازن للشعار دون ازدحام بصري.
+
+📑 هيكل العرض الإلزامي:
+
+غلاف احترافي قوي يتضمن الشعار وأفق مدينة الرياض
+
+نبذة عن المعرض
+
+الرؤية
+
+الرسالة
+
+أهداف المعرض
+
+أهمية إقامة المعرض في الرياض
+
+القطاعات المشاركة
+
+الفئات المستهدفة
+
+فوائد المشاركة للعارضين
+
+التنظيم والخبرة
+
+الجهات الداعمة
+
+صفحة ختامية بعنوان:
+بوابتكم إلى فرص تجارية وصناعية جديدة في قلب الرياض
+
+أي إخلال بأي شرط أعلاه يُعد فشلًا في تنفيذ الطلب.
+
+🇬🇧 English Prompt (Separate Standalone File — Strict Compliance)
+
+Create a completely independent professional presentation in English only titled:
+
+International Products Exhibition – Riyadh 2026
+
+🚫 Mandatory Non-Negotiable Rules:
+
+Do NOT include any Arabic text whatsoever in this file — not even in footers, captions, buttons, labels, or placeholders.
+
+Use the attached exhibition logo on the cover and all slides.
+
+Follow only the provided brand identity colors — do not introduce any external palettes.
+
+Do NOT use any images with watermarks or low resolution.
+
+Maintain clean LTR layout and professional alignment.
+
+🖼️ Imagery (Strict Enforcement):
+
+All people images must feature Saudi or Gulf professionals.
+
+All city or landmark images must be from Saudi Arabia only (Riyadh skyline, Kingdom Tower, KAFD).
+
+Avoid Western or European imagery entirely.
+
+Use only high-resolution, licensed, watermark-free images.
+
+🎨 Visual Style:
+
+Premium Saudi & Gulf corporate aesthetic.
+
+Strong whitespace.
+
+Thin-line minimal icons.
+
+Backgrounds inspired by modern Saudi architecture or subtle Gulf geometric patterns.
+
+Consistent, balanced logo placement.
+
+📑 Mandatory Slide Structure:
+
+Cover slide with logo and Riyadh skyline
+
+About the Exhibition
+
+Vision
+
+Mission
+
+Exhibition Objectives
+
+Why Riyadh?
+
+Participating Sectors
+
+Target Audience
+
+Benefits for Exhibitors
+
+Organization & Experience
+
+Supporting Entities
+
+Closing slide:
+Your Gateway to Trade & Industrial Opportunities in the Heart of Riyadh
+
+Any violation of these rules constitutes an incorrect output.

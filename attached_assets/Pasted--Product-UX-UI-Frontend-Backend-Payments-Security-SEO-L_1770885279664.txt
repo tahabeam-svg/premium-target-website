@@ -1,0 +1,343 @@
+أنت فريق تطوير وتسويق متكامل (Product + UX/UI + Frontend + Backend + Payments + Security + SEO + Local SEO + GEO/AEO + Content + Ops). ابنِ من الصفر نسخة جديدة لموقع Premium Target https://premiumtarget.sa/ كوكالة سعودية متخصصة في: تصميم الهوية التجارية، تصميم الشعارات، الهوية البصرية، وتصميم المواقع الإلكترونية — بثلاث لغات: العربية (ar-SA) + الإنجليزية (en) + الفرنسية (fr) — مع لوحة تحكم للمحتوى (Sanity) + زر واتساب ثابت + معرض أعمال قوي جدًا + متجر باقات وأسعار قابل للشراء مباشرة عبر بوابة الدفع Paymob السعودية (https://paymob.sa) + سلة شراء + “باقة مخصصة” يبنيها العميل ويشتريها فورًا، مع متطلبات Production كاملة (SEO migration + 301 redirects تلقائيًا + noindex للصفحات الحساسة + لوحة طلبات + Refunds + Coupons مرة واحدة + أمان + اختبارات + Emails + Logs + PDPL + Backups + Sandbox/Prod) + تحسينات SEO/AI إضافية (SearchAction + صفحة بحث + Image sitemap + UTM canonical + حماية إضافية للكوبونات + Content Ops) + ملاحظات تشغيل نهائية (noindex query search، تأكيد reserved بعد webhook، unique constraints محددة، صلاحيات admin، سياسة cache واضحة).
+
+التقنيات الملزمة:
+- Next.js (App Router) + TypeScript + Tailwind CSS
+- i18n بمسارات ثابتة للـ SEO: /ar (RTL) /en (LTR) /fr (LTR) بحيث {lang} ∈ {ar,en,fr}
+- Sanity CMS (Studio) لوحة تحكم على /studio لإدارة: المقالات + الأعمال + الباقات + الإضافات + الإعدادات العامة + الكوبونات + الصور
+- PostgreSQL + Prisma
+- Paymob KSA (paymob.sa) Checkout/Payment APIs + Webhooks
+- حماية: validation صارم + rate limiting + hCaptcha + Security headers
+- قاعدة ذهبية: السعر النهائي/الخصم/الضريبة تُحسب على السيرفر فقط من Sanity لحظة checkout (لا تثق بأي total من العميل)
+- دعم بيئتين: PAYMOB_ENV=sandbox|production
+
+=====================================================
+1) متعدد اللغات (SEO & AI Search) + تثبيت الأكواد (إلزامي)
+=====================================================
+- جميع الصفحات تحت: /ar /en /fr
+- / يعيد توجيهًا إلى /ar (أو auto-detect مع تثبيت اختيار المستخدم)
+- language switcher في الهيدر
+- hreflang (ثابت ولا يتغير):
+  - العربية: ar-SA
+  - الإنجليزية: en
+  - الفرنسية: fr
+  - + x-default
+- canonical لكل نسخة لغوية لنفسها
+- OG locale (ثابت ولا يتغير — يُستخدم فقط في OpenGraph):
+  - العربية: ar_SA
+  - الإنجليزية: en_US
+  - الفرنسية: fr_FR
+- sitemap.xml متعدد اللغات + lastmod + إدراج المقالات والأعمال والباقات وصفحات المدن + صفحة search
+- image-sitemap.xml لصور الأعمال/المقالات/الباقات (أو ضمن sitemap الرئيسي)
+- robots.txt مضبوط
+- llms.txt في /public/llms.txt يذكر الصفحات الأهم لكل لغة: services, work, blog, pricing, build-your-package, contact, search
+- قرار slugs: slug واحد “مشترك” لكل محتوى (مقال/عمل/باقة) لتسهيل الدفع والسلة، مع حقول نصية متعددة اللغات
+
+=====================================================
+2) Meta/OG/Twitter + Icons لكل صفحة ولكل لغة (إلزامي)
+=====================================================
+لكل صفحة في كل لغة:
+- title فريد ومناسب للغة (ليس نسخة حرفية)
+- meta description فريد ومناسب للغة
+- OpenGraph (استخدم OG locale الثابت أعلاه):
+  og:title / og:description / og:url / og:locale / og:image
+- Twitter cards:
+  twitter:title / twitter:description / twitter:image
+- favicon كامل (مجموعة أحجام) + site.webmanifest + theme-color
+- canonical + hreflang كما في القسم (1)
+- منع تكرار صفحات UTM/query: canonical دائمًا للنسخة بدون params
+
+=====================================================
+3) زر واتساب ثابت (إلزامي)
+=====================================================
+- الرقم: +966553011730
+- الرابط: https://wa.me/966553011730
+- زر Floating في جميع الصفحات + CTA داخل: الخدمات، لماذا نحن، المعرض، الباقات، صفحة الشكر
+- تتبع click لـ GA4/GTM عبر dataLayer event
+- زر لا يغطي المحتوى (responsive)
+
+=====================================================
+4) Sanity Studio /studio (محتوى 3 لغات + أسعار + كوبونات)
+=====================================================
+صلاحيات: Admin/Editor + Orders/Finance. يجب تعديل الأسعار فورًا من اللوحة بدون كود.
+تغييرات الأسعار/الكوبونات تنعكس فورًا عبر Webhook Revalidation (revalidateTag).
+
+Schemas:
+A) Article
+- title/excerpt/body {ar,en,fr}, slug(shared), featuredImage, category/tags/author/status/publishDate/updatedAt
+- seo {metaTitle/metaDescription} لكل لغة
+
+B) CaseStudy/Project
+- title {ar,en,fr}, slug(shared), services, industry
+- summary/problem/goal/solution/outcome {ar,en,fr}
+- deliverables, timeline, featuredImage, galleryImages, publishDate
+- seo لكل لغة
+- لكل صورة: alt {ar,en,fr} (إلزامي)
+
+C) Packages (أسعار قابلة للتعديل فورًا)
+- name/shortDescription {ar,en,fr}, slug, includedItems, deliveryTime, revisions
+- priceSAR (number)
+- isPopular
+- seo لكل لغة
+
+D) AddOns (أسعار قابلة للتعديل فورًا)
+- title/description {ar,en,fr}, category, priceSAR, rules(optional)
+
+E) Coupons (مرة واحدة)
+- code, type, value, status, startDate/endDate, minOrderAmount(optional)
+- maxRedemptions default=1, perCustomerLimit default=1, appliesTo, notes(optional)
+
+F) Global Settings
+- NAP + ساعات العمل + البريد + روابط السوشيال
+- VAT% (اختياري)
+- Paymob placeholders (لا secrets)
+- SEO defaults (OG image)
+- Content Ops templates
+
+=====================================================
+5) صفحات الموقع الأساسية (لكل لغة)
+=====================================================
+- /{lang} (Home)
+- /{lang}/about
+- /{lang}/why-us
+- /{lang}/process (منهجية العمل — إلزامي)
+- /{lang}/team أو قسم “من يقف خلف بريميوم تارجت” داخل about (E-E-A-T)
+- /{lang}/services
+  - /{lang}/services/logo-design
+  - /{lang}/services/brand-identity
+  - /{lang}/services/visual-identity
+  - /{lang}/services/web-design
+- /{lang}/work + /{lang}/work/[slug]
+- /{lang}/blog + /{lang}/blog/[slug]
+- /{lang}/pricing + /{lang}/pricing/[slug]
+- /{lang}/build-your-package
+- /{lang}/cart
+- /{lang}/checkout
+- /{lang}/thank-you?order=...
+- /{lang}/faq
+- /{lang}/contact
+- /{lang}/privacy-policy
+- /{lang}/terms
+- /{lang}/refund-policy
+- /{lang}/search
+
+Programmatic SEO (مدينة + خدمة):
+- ابدأ بعدد محدود (3 صفحات نموذجية)
+- لا تنشئ صفحات مدينة كثيرة إلا مع محتوى فريد فعليًا، وإلا اجعلها noindex مؤقتًا
+
+=====================================================
+6) E-E-A-T (متطلب صريح)
+=====================================================
+- “من يقف خلف بريميوم تارجت”: خبرة/تخصص/قيم جودة
+- صفحة process واضحة
+- Testimonials موثوقة (قابلة للإدارة)
+- بيانات تواصل واضحة + سياسات (privacy/terms/refund)
+
+=====================================================
+7) صفحات الخدمات (AI-friendly + SEO)
+=====================================================
+لكل خدمة ولكل لغة:
+- H1 واحد واضح
+- ملخص سريع 2–4 أسطر أعلى الصفحة
+- Quick Answers (2–5 سؤال/جواب قصير جدًا) أعلى الصفحة
+- H2/H3 منظمة + Deliverables + مدة + منهجية + CTA واتساب
+- Transcreation للإنجليزية والفرنسية (ليست ترجمة حرفية)
+
+=====================================================
+8) معرض الأعمال (قوي جدًا)
+=====================================================
+- /work: Hero + CTA + Filters + Search + Sorting
+- /work/[slug]: Summary + Problem/Goal/Solution + Deliverables + Timeline + Gallery + Why this approach + CTA
+- ALT ثلاث لغات + صور محسنة + image sitemap
+
+=====================================================
+9) الباقات + Builder + Cart + تحديث الأسعار فورًا
+=====================================================
+- كل الأسعار من Sanity فقط
+- شرط صريح: pricing/builder/cart تتحدث فورًا عبر revalidateTag('pricing')
+- الباقات خدمات وليست منتجات: لا تستخدم Product schema (استخدم Service/OfferCatalog/ItemList)
+- checkout يحسب السعر النهائي من السيرفر ويخزن snapshots (لا تعتمد على Sanity بعد الدفع لعرض الفاتورة)
+
+=====================================================
+10) الدفع Paymob + Webhooks + أمان + Sandbox/Prod
+=====================================================
+- PAYMOB_ENV=sandbox|production
+- Webhook HMAC verification + idempotency
+- لا تعتبر الطلب “Paid” إلا بعد webhook success
+
+حماية إضافية للكوبونات (Anti-bruteforce):
+- rate limiting أقوى على محاولات إدخال الكوبون
+- captcha تدريجي عند كثرة المحاولات
+
+Prisma Models (مطلوبة):
+- Order: status(draft/initiated/paid/failed/canceled/fulfilled/refunded), orderNumber, lang, currency(SAR),
+  subtotalSnapshot, vatSnapshot, discountSnapshot, totalSnapshot, customerName, customerEmail, customerPhone, brief, couponCode?
+- OrderItem: refId, type(package/addon/custom), titleSnapshot, unitPriceSnapshot, qty, lineTotalSnapshot
+- Payment: provider, paymobReference, transactionId UNIQUE, status, rawPayload
+- CouponRedemption: couponCode, customerKey(emailOrPhone), orderId, status(reserved/confirmed/expired), timestamps
+- Receipt: orderId UNIQUE, receiptNumber, issuedAt, totals snapshots, itemsSnapshot(JSON)
+- WebhookLog: signatureOk, payload, createdAt
+- ErrorLog: scope + orderNumber? + payload?
+
+Endpoints:
+1) POST /api/checkout/create
+- يجلب الأسعار من Sanity
+- يحسب subtotal/VAT/discount/total
+- يخزن snapshots في Order/OrderItem
+- يطبق coupon داخل DB transaction (atomic) ويمنع السباقات
+- ينشئ Paymob checkout_url ويرجعه
+
+2) POST /api/webhooks/paymob
+- تحقق HMAC + سجل WebhookLog
+- Idempotent (لا تكرر paid/receipt/emails عند تكرار transactionId)
+- success:
+  - Order=paid, Payment=success
+  - CouponRedemption: reserved → confirmed
+  - Receipt من snapshots
+  - Emails: للعميل + إشعار داخلي
+- failed/canceled:
+  - تحديث الحالة
+  - CouponRedemption: reserved → expired
+
+3) GET /api/orders/[orderNumber]
+- يعيد حالة الطلب للواجهة (thank-you/pending)
+
+=====================================================
+11) Schema (بالأسماء + JSON-LD) + اختبار إلزامي
+=====================================================
+طبّق JSON-LD واختبره وأصلح الأخطاء/التحذيرات:
+- Organization (site-wide)
+- WebSite (site-wide) + SearchAction
+- LocalBusiness (contact)
+- Service (صفحات الخدمات)
+- FAQPage (Quick Answers)
+- BreadcrumbList
+- Article (المقالات)
+- CollectionPage + ItemList (work/pricing)
+- CreativeWork/Project (case studies)
+- تأكيد: الباقات ليست Product
+
+=====================================================
+12) Search + SearchAction + سياسة noindex لنتائج query
+=====================================================
+- /{lang}/search صفحة ثابتة indexable بعنوان ومحتوى ثابت + مربع بحث
+- أي /search?q=... تكون noindex + canonical ثابت إلى /{lang}/search بدون params
+- SearchAction يشير إلى /{lang}/search?q={search_term_string}
+- سطر توضيحي إلزامي: SearchAction لا يعني فهرسة نتائج query؛ فقط تعريف ميزة البحث.
+
+=====================================================
+13) Robots + UTM Canonical + Crawl Budget
+=====================================================
+- canonical للنسخة بدون UTM/query
+- robots يمنع فهرسة query patterns غير مفيدة لتقليل duplicate indexing
+
+=====================================================
+14) Revalidation Tags من Sanity Webhooks (إلزامي)
+=====================================================
+- /api/revalidate?tag=pricing/coupons/content
+- Webhooks:
+  Packages/AddOns → pricing (revalidateTag('pricing'))
+  Coupons → coupons
+  Articles/Projects/Testimonials → content
+- سجل أخطاء revalidate في ErrorLog
+
+=====================================================
+15) SEO Migration + Redirects تلقائية + Overrides + تقرير تحقق
+=====================================================
+- توليد redirects.source / redirects.generated / redirects.overrides / redirects.final
+- تطبيق 301 في next.config.js من redirects.final
+- تقرير redirects-report + smoke test
+- إلزامي: اختبر أهم 200 رابط قديم (أو كل روابط sitemap القديم إن أمكن) قبل الإطلاق
+
+=====================================================
+16) noindex للصفحات الحساسة
+=====================================================
+- /{lang}/cart /{lang}/checkout /{lang}/thank-you = noindex,nofollow
+- return pages noindex
+- صفحات مدينة غير فريدة noindex مؤقتًا
+- /studio محمي وغير مفهرس
+
+=====================================================
+17) Admin Orders + Refunds + Roles
+=====================================================
+- لوحة /admin/orders أو داخل Sanity Desk
+- Roles:
+  - Admin: كل شيء
+  - Editor: محتوى فقط
+  - Orders/Finance: طلبات + refunds فقط
+- عرض WebhookLog/ErrorLog حسب الطلب
+- Refund Flow: تسجيل سبب + مرجع + تاريخ
+
+=====================================================
+18) Cache Policy (إلزامي)
+=====================================================
+- صفحات عامة (home/about/services/work/blog/pricing): ISR + revalidateTag
+- endpoints الحساسة (cart/checkout/orders/coupon validate): no-store
+- لا تخزن ردود الدفع/حالة الطلب في CDN cache
+
+=====================================================
+19) Coupon Lifecycle + TTL (إلزامي)
+=====================================================
+- reserved → confirmed فقط بعد webhook success
+- reserved → expired عند failed/canceled
+- إذا بقي reserved أكثر من 30 دقيقة دون نجاح دفع: تتحول تلقائيًا expired (cleanup job/cron أو عند أي محاولة جديدة)
+
+=====================================================
+20) Unique Constraints (إلزامي)
+=====================================================
+- Payment.transactionId UNIQUE
+- Receipt.orderId UNIQUE
+- CouponRedemption confirmed:
+  - maxRedemptions=1 يمنع confirmed ثانية لنفس couponCode
+  - perCustomerLimit=1 يمنع confirmed ثانية لنفس (couponCode + customerKey)
+(نفّذ ذلك عبر unique indexes أو تصميم مكافئ يمنع التكرار المؤكد)
+
+=====================================================
+21) الأداء + UX + اختبارات + Security headers
+=====================================================
+- Lighthouse Mobile >= 90
+- 404/500 + حالات Loading/Empty/Error + Accessibility
+- Smoke Tests:
+  redirects 301
+  checkout/create يرجع checkout_url
+  webhook HMAC
+  كوبون مرة واحدة: الاستخدام الثاني يفشل
+  webhook idempotency: نفس webhook مرتين لا يكرر paid ولا الإيميلات
+- Security Headers: CSP + X-Frame-Options + X-Content-Type-Options + Referrer-Policy
+
+=====================================================
+22) Emails + Logs + Observability
+=====================================================
+- عند paid: Email للعميل + إشعار داخلي
+- Logs مرتبطة بـ orderNumber
+- صفحة Admin لآخر أخطاء الدفع
+
+=====================================================
+23) PDPL + تقليل البيانات + طلب حذف/تصدير
+=====================================================
+- جمع أقل بيانات + توضيح السبب
+- آلية طلب حذف/تصدير
+
+=====================================================
+24) Migrations + Backups
+=====================================================
+- Prisma migrations موثقة
+- سكربت backup dump + تعليمات دورية
+
+=====================================================
+25) Content Ops
+=====================================================
+- README يحتوي خطة نشر أسبوعية + قوالب كتابة + قواعد Transcreation
+
+=====================================================
+المخرجات النهائية
+=====================================================
+- موقع ثلاثي اللغات يعمل على Replit
+- Sanity Studio على /studio مع تحرير سريع للأسعار/الباقات/add-ons/الكوبونات
+- Blog + Work + Pricing + Builder + Cart + Checkout + Paymob Webhooks + Orders DB + Receipts + Logs + Emails
+- SEO كامل: Meta/OG/Twitter لكل لغة + hreflang/canonical + sitemap/robots/llms.txt + image sitemap + UTM canonical + 301 redirects + تقارير تحقق
+- Schema JSON-LD مطبق ومختبر
+- E-E-A-T مكتمل
+- README عربي يشرح الإعدادات والتشغيل والاختبارات وخطة المحتوى
+
+ابدأ التنفيذ بالترتيب:
+i18n → Sanity schemas → Meta/OG + schema base → E-E-A-T pages → work/blog/pricing → builder+cart → paymob checkout+webhooks+emails+receipts → revalidation tags → search + noindex query policy → image sitemap + ALT → robots/UTM canonical → redirects generator+report+next.config → noindex rules → admin roles+orders+refunds+logs → cache policy → coupon lifecycle+TTL+unique constraints → PDPL+backups/migrations → performance+security+smoke tests → README + Content Ops.
